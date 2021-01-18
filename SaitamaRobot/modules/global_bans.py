@@ -74,7 +74,7 @@ UNGBAN_ERRORS = {
 
 @run_async
 @support_plus
-def gban(update: Update, context: CallbackContext):
+def jban(update: Update, context: CallbackContext):
     bot, args = context.bot, context.args
     message = update.effective_message
     user = update.effective_user
@@ -176,7 +176,7 @@ def gban(update: Update, context: CallbackContext):
         chat_origin = "<b>{}</b>\n".format(chat.id)
 
     log_message = (
-        f"#GBANNED\n"
+        f"#JUSTICE BANNED\n"
         f"<b>Originated from:</b> <code>{chat_origin}</code>\n"
         f"<b>Admin:</b> {mention_html(user.id, user.first_name)}\n"
         f"<b>Banned User:</b> {mention_html(user_chat.id, user_chat.first_name)}\n"
@@ -232,7 +232,7 @@ def gban(update: Update, context: CallbackContext):
                     )
                 else:
                     send_to_list(
-                        bot, DRAGONS + DEMONS, f"Could not gban due to: {excp.message}"
+                        bot, DRAGONS + DEMONS, f"Could not jban due to: {excp.message}"
                     )
                 sql.ungban_user(user_id)
                 return
@@ -257,9 +257,9 @@ def gban(update: Update, context: CallbackContext):
 
     if gban_time > 60:
         gban_time = round((gban_time / 60), 2)
-        message.reply_text("Done! Gbanned.", parse_mode=ParseMode.HTML)
+        message.reply_text("Done! Jbanned.", parse_mode=ParseMode.HTML)
     else:
-        message.reply_text("Done! Gbanned.", parse_mode=ParseMode.HTML)
+        message.reply_text("Done! Jbanned.", parse_mode=ParseMode.HTML)
 
     try:
         bot.send_message(
@@ -276,7 +276,7 @@ def gban(update: Update, context: CallbackContext):
 
 @run_async
 @support_plus
-def ungban(update: Update, context: CallbackContext):
+def unjban(update: Update, context: CallbackContext):
     bot, args = context.bot, context.args
     message = update.effective_message
     user = update.effective_user
@@ -312,7 +312,7 @@ def ungban(update: Update, context: CallbackContext):
         chat_origin = f"<b>{chat.id}</b>\n"
 
     log_message = (
-        f"#UNGBANNED\n"
+        f"#UNJBANNED\n"
         f"<b>Originated from:</b> <code>{chat_origin}</code>\n"
         f"<b>Admin:</b> {mention_html(user.id, user.first_name)}\n"
         f"<b>Unbanned User:</b> {mention_html(user_chat.id, user_chat.first_name)}\n"
@@ -352,16 +352,16 @@ def ungban(update: Update, context: CallbackContext):
             if excp.message in UNGBAN_ERRORS:
                 pass
             else:
-                message.reply_text(f"Could not un-gban due to: {excp.message}")
+                message.reply_text(f"Could not un-jban due to: {excp.message}")
                 if EVENT_LOGS:
                     bot.send_message(
                         EVENT_LOGS,
-                        f"Could not un-gban due to: {excp.message}",
+                        f"Could not un-jban due to: {excp.message}",
                         parse_mode=ParseMode.HTML,
                     )
                 else:
                     bot.send_message(
-                        OWNER_ID, f"Could not un-gban due to: {excp.message}"
+                        OWNER_ID, f"Could not un-jban due to: {excp.message}"
                     )
                 return
         except TelegramError:
@@ -375,41 +375,41 @@ def ungban(update: Update, context: CallbackContext):
             parse_mode=ParseMode.HTML,
         )
     else:
-        send_to_list(bot, DRAGONS + DEMONS, "un-gban complete!")
+        send_to_list(bot, DRAGONS + DEMONS, "un-jban complete!")
 
     end_time = time.time()
     ungban_time = round((end_time - start_time), 2)
 
     if ungban_time > 60:
         ungban_time = round((ungban_time / 60), 2)
-        message.reply_text(f"Person has been un-gbanned. Took {ungban_time} min")
+        message.reply_text(f"Person has been un-jbanned. Took {ungban_time} min")
     else:
-        message.reply_text(f"Person has been un-gbanned. Took {ungban_time} sec")
+        message.reply_text(f"Person has been un-jbanned. Took {ungban_time} sec")
 
 
 @run_async
 @support_plus
-def gbanlist(update: Update, context: CallbackContext):
+def jbanlist(update: Update, context: CallbackContext):
     banned_users = sql.get_gban_list()
 
     if not banned_users:
         update.effective_message.reply_text(
-            "There aren't any gbanned users! You're kinder than I expected..."
+            "There aren't any jbanned users! You're kinder than I expected..."
         )
         return
 
-    banfile = "Screw these guys.\n"
+    banfile = "List Of All JBANNED Users\n"
     for user in banned_users:
         banfile += f"[x] {user['name']} - {user['user_id']}\n"
         if user["reason"]:
             banfile += f"Reason: {user['reason']}\n"
 
     with BytesIO(str.encode(banfile)) as output:
-        output.name = "gbanlist.txt"
+        output.name = "jbanlist.txt"
         update.effective_message.reply_document(
             document=output,
-            filename="gbanlist.txt",
-            caption="Here is the list of currently gbanned users.",
+            filename="jbanlist.txt",
+            caption="Here is the list of currently jbanned users.",
         )
 
 
@@ -481,7 +481,7 @@ def enforce_gban(update: Update, context: CallbackContext):
 
 @run_async
 @user_admin
-def gbanstat(update: Update, context: CallbackContext):
+def jbanstat(update: Update, context: CallbackContext):
     args = context.args
     if len(args) > 0:
         if args[0].lower() in ["on", "yes"]:
@@ -506,7 +506,7 @@ def gbanstat(update: Update, context: CallbackContext):
 
 
 def __stats__():
-    return f"• {sql.num_gbanned_users()} gbanned users."
+    return f"• {sql.num_gbanned_users()} jbanned users."
 
 
 def __user_info__(user_id):
@@ -552,11 +552,11 @@ Constantly help banning spammers off from your group automatically So, you wont 
 *Note:* Users can appeal spamwatch bans at @SpamwatchSupport
 """
 
-GBAN_HANDLER = CommandHandler("gban", gban)
-UNGBAN_HANDLER = CommandHandler("ungban", ungban)
-GBAN_LIST = CommandHandler("gbanlist", gbanlist)
+GBAN_HANDLER = CommandHandler("jban", jban)
+UNGBAN_HANDLER = CommandHandler("unjban", unjban)
+GBAN_LIST = CommandHandler("jbanlist", jbanlist)
 
-GBAN_STATUS = CommandHandler("antispam", gbanstat, filters=Filters.group)
+GBAN_STATUS = CommandHandler("antispam", jbanstat, filters=Filters.group)
 
 GBAN_ENFORCER = MessageHandler(Filters.all & Filters.group, enforce_gban)
 
