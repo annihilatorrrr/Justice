@@ -326,63 +326,6 @@ def info(update: Update, context: CallbackContext):
         # Incase user don't have profile pic, send normal text
 
 
-async def about_me(update: Update, context: CallbackContext):
-    bot, args = context.bot, context.args
-    message = update.effective_message
-    user_id = extract_user(message, args)
-
-    if user_id:
-        user = bot.get_chat(user_id)
-    else:
-        user = message.from_user
-
-    info = sql.get_user_me_info(user.id)
-
-    if info:
-        update.effective_message.reply_text(
-            f"*{user.first_name}*:\n{escape_markdown(info)}",
-            parse_mode=ParseMode.MARKDOWN,
-            disable_web_page_preview=True,
-        )
-    elif message.reply_to_message:
-        username = message.reply_to_message.from_user.first_name
-        update.effective_message.reply_text(
-            f"{username} hasn't set an info message about themselves yet!"
-        )
-    else:
-        update.effective_message.reply_text("There isnt one, use /setme to set one.")
-
-
-@run_async
-def set_about_me(update: Update, context: CallbackContext):
-    message = update.effective_message
-    user_id = message.from_user.id
-    if user_id in [777000, 1087968824]:
-        message.reply_text("Error! Unauthorized")
-        return
-    bot = context.bot
-    if message.reply_to_message:
-        repl_message = message.reply_to_message
-        repl_user_id = repl_message.from_user.id
-        if repl_user_id in [bot.id, 777000, 1087968824] and (user_id in DEV_USERS):
-            user_id = repl_user_id
-    text = message.text
-    info = text.split(None, 1)
-    if len(info) == 2:
-        if len(info[1]) < MAX_MESSAGE_LENGTH // 4:
-            sql.set_user_me_info(user_id, info[1])
-            if user_id in [777000, 1087968824]:
-                message.reply_text("Authorized...Information updated!")
-            elif user_id == bot.id:
-                message.reply_text("I have updated my info with the one you provided!")
-            else:
-                message.reply_text("Information updated!")
-        else:
-            message.reply_text(
-                "The info needs to be under {} characters! You have {}.".format(
-                    MAX_MESSAGE_LENGTH // 4, len(info[1])
-                )
-            )
 
 
 @run_async
