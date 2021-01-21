@@ -287,13 +287,13 @@ def info(update: Update, context: CallbackContext):
     disaster_level_present = False
 
     if user.id == OWNER_ID:
-        text += "\n\nThe Disaster level of this person is 'God'."
+        text += "\n\nOwner"
         disaster_level_present = True
     elif user.id in DEV_USERS:
-        text += "\n\nThis user is member of 'Hero Association'."
+        text += "\n\nDevloper."
         disaster_level_present = True
     elif user.id in DRAGONS:
-        text += "\n\nThe Disaster level of this person is 'Dragon'."
+        text += "\n\nSudo."
         disaster_level_present = True
     elif user.id in DEMONS:
         text += "\n\nThe Disaster level of this person is 'Demon'."
@@ -305,10 +305,6 @@ def info(update: Update, context: CallbackContext):
         text += "\n\nThe Disaster level of this person is 'Wolf'."
         disaster_level_present = True
 
-    if disaster_level_present:
-        text += ' [<a href="https://t.me/OnePunchUpdates/155">?</a>]'.format(
-            bot.username
-        )
 
     try:
         user_member = chat.get_member(user.id)
@@ -316,12 +312,6 @@ def info(update: Update, context: CallbackContext):
             result = requests.post(
                 f"https://api.telegram.org/bot{TOKEN}/getChatMember?chat_id={chat.id}&user_id={user.id}"
             )
-            result = result.json()["result"]
-            if "custom_title" in result.keys():
-                custom_title = result["custom_title"]
-                text += f"\n\nTitle:\n<b>{custom_title}</b>"
-    except BadRequest:
-        pass
 
     for mod in USER_INFO:
         try:
@@ -555,22 +545,12 @@ GET_ABOUT_HANDLER = DisableAbleCommandHandler("me", about_me)
 
 dispatcher.add_handler(STATS_HANDLER)
 dispatcher.add_handler(ID_HANDLER)
-dispatcher.add_handler(GIFID_HANDLER)
 dispatcher.add_handler(INFO_HANDLER)
-dispatcher.add_handler(SET_BIO_HANDLER)
-dispatcher.add_handler(GET_BIO_HANDLER)
-dispatcher.add_handler(SET_ABOUT_HANDLER)
-dispatcher.add_handler(GET_ABOUT_HANDLER)
 
 __mod_name__ = "Info"
-__command_list__ = ["setbio", "bio", "setme", "me", "info"]
+__command_list__ = ["info"]
 __handlers__ = [
     ID_HANDLER,
-    GIFID_HANDLER,
     INFO_HANDLER,
-    SET_BIO_HANDLER,
-    GET_BIO_HANDLER,
-    SET_ABOUT_HANDLER,
-    GET_ABOUT_HANDLER,
     STATS_HANDLER,
 ]
