@@ -176,7 +176,7 @@ def jban(update: Update, context: CallbackContext):
         chat_origin = "<b>{}</b>\n".format(chat.id)
 
     log_message = (
-        f"#JUSTICE BANNED\n"
+        f"$JUSTICE_BANNED\n"
         f"<b>Originated from:</b> <code>{chat_origin}</code>\n"
         f"<b>Admin:</b> {mention_html(user.id, user.first_name)}\n"
         f"<b>Banned User:</b> {mention_html(user_chat.id, user_chat.first_name)}\n"
@@ -248,7 +248,7 @@ def jban(update: Update, context: CallbackContext):
         send_to_list(
             bot,
             DRAGONS + DEMONS,
-            f"Gban complete! (User banned in <code>{gbanned_chats}</code> chats)",
+            f"JBan complete! (User banned in <code>{gbanned_chats}</code> chats)",
             html=True,
         )
 
@@ -312,7 +312,7 @@ def unjban(update: Update, context: CallbackContext):
         chat_origin = f"<b>{chat.id}</b>\n"
 
     log_message = (
-        f"#UNJBANNED\n"
+        f"$JUSTICE_UNBANNED\n"
         f"<b>Originated from:</b> <code>{chat_origin}</code>\n"
         f"<b>Admin:</b> {mention_html(user.id, user.first_name)}\n"
         f"<b>Unbanned User:</b> {mention_html(user_chat.id, user_chat.first_name)}\n"
