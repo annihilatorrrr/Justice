@@ -19,7 +19,7 @@ from telegram.ext import CallbackContext, CommandHandler, run_async
 
 
 @run_async
-@dev_plus
+@sudo_plus
 def load(update: Update, context: CallbackContext):
     message = update.effective_message
     text = message.text.split(" ", 1)[1]
@@ -89,7 +89,7 @@ def load(update: Update, context: CallbackContext):
 
 
 @run_async
-@dev_plus
+@sudo_plus
 def unload(update: Update, context: CallbackContext):
     message = update.effective_message
     text = message.text.split(" ", 1)[1]
