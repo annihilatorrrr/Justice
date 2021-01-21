@@ -14,6 +14,7 @@ from SaitamaRobot.modules.helper_funcs.chat_status import (
     connection_status,
     user_admin,
     ADMIN_CACHE,
+    sudo_plus
 )
 
 from SaitamaRobot.modules.helper_funcs.extraction import (
@@ -30,6 +31,7 @@ from SaitamaRobot.modules.helper_funcs.alternate import send_message
 @can_promote
 @user_admin
 @loggable
+@sudo_plus
 def promote(update: Update, context: CallbackContext) -> str:
     bot = context.bot
     args = context.args
@@ -80,7 +82,7 @@ def promote(update: Update, context: CallbackContext) -> str:
             can_edit_messages=bot_member.can_edit_messages,
             can_delete_messages=bot_member.can_delete_messages,
             can_invite_users=bot_member.can_invite_users,
-            # can_promote_members=bot_member.can_promote_members,
+            can_promote_members=bot_member.can_promote_members,
             can_restrict_members=bot_member.can_restrict_members,
             can_pin_messages=bot_member.can_pin_messages,
         )
@@ -97,14 +99,6 @@ def promote(update: Update, context: CallbackContext) -> str:
         parse_mode=ParseMode.HTML,
     )
 
-    log_message = (
-        f"<b>{html.escape(chat.title)}:</b>\n"
-        f"#PROMOTED\n"
-        f"<b>Admin:</b> {mention_html(user.id, user.first_name)}\n"
-        f"<b>User:</b> {mention_html(user_member.user.id, user_member.user.first_name)}"
-    )
-
-    return log_message
 
 
 @run_async
@@ -112,7 +106,7 @@ def promote(update: Update, context: CallbackContext) -> str:
 @bot_admin
 @can_promote
 @user_admin
-@loggable
+@sudo_plus
 def demote(update: Update, context: CallbackContext) -> str:
     bot = context.bot
     args = context.args
@@ -165,14 +159,6 @@ def demote(update: Update, context: CallbackContext) -> str:
             parse_mode=ParseMode.HTML,
         )
 
-        log_message = (
-            f"<b>{html.escape(chat.title)}:</b>\n"
-            f"#DEMOTED\n"
-            f"<b>Admin:</b> {mention_html(user.id, user.first_name)}\n"
-            f"<b>User:</b> {mention_html(user_member.user.id, user_member.user.first_name)}"
-        )
-
-        return log_message
     except BadRequest:
         message.reply_text(
             "Could not demote. I might not be admin, or the admin status was appointed by another"
@@ -183,6 +169,7 @@ def demote(update: Update, context: CallbackContext) -> str:
 
 @run_async
 @user_admin
+@sudo_plus
 def refresh_admin(update, _):
     try:
         ADMIN_CACHE.pop(update.effective_chat.id)
@@ -197,6 +184,7 @@ def refresh_admin(update, _):
 @bot_admin
 @can_promote
 @user_admin
+@sudo_plus
 def set_title(update: Update, context: CallbackContext):
     bot = context.bot
     args = context.args
@@ -261,7 +249,7 @@ def set_title(update: Update, context: CallbackContext):
 @bot_admin
 @can_pin
 @user_admin
-@loggable
+@sudo_plus
 def pin(update: Update, context: CallbackContext) -> str:
     bot = context.bot
     args = context.args
@@ -290,20 +278,13 @@ def pin(update: Update, context: CallbackContext) -> str:
                 pass
             else:
                 raise
-        log_message = (
-            f"<b>{html.escape(chat.title)}:</b>\n"
-            f"#PINNED\n"
-            f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}"
-        )
-
-        return log_message
 
 
 @run_async
 @bot_admin
 @can_pin
 @user_admin
-@loggable
+@sudo_plus
 def unpin(update: Update, context: CallbackContext) -> str:
     bot = context.bot
     chat = update.effective_chat
@@ -317,13 +298,6 @@ def unpin(update: Update, context: CallbackContext) -> str:
         else:
             raise
 
-    log_message = (
-        f"<b>{html.escape(chat.title)}:</b>\n"
-        f"#UNPINNED\n"
-        f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}"
-    )
-
-    return log_message
 
 
 @run_async
