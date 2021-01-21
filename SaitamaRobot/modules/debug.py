@@ -53,7 +53,7 @@ support_chat = os.getenv("SUPPORT_CHAT")
 
 
 @run_async
-@dev_plus
+@sudo_plus
 def logs(update: Update, context: CallbackContext):
     user = update.effective_user
     with open("log.txt", "rb") as f:
