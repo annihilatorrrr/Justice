@@ -21,7 +21,6 @@ from SaitamaRobot.modules.helper_funcs.extraction import (
     extract_user,
     extract_user_and_text,
 )
-from SaitamaRobot.modules.log_channel import loggable
 from SaitamaRobot.modules.helper_funcs.alternate import send_message
 
 
@@ -30,7 +29,6 @@ from SaitamaRobot.modules.helper_funcs.alternate import send_message
 @bot_admin
 @can_promote
 @user_admin
-@loggable
 @sudo_plus
 def promote(update: Update, context: CallbackContext) -> str:
     bot = context.bot
