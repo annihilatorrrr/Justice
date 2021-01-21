@@ -10,10 +10,7 @@ from SaitamaRobot.modules.helper_funcs.chat_status import sudo_plus
 from SaitamaRobot.modules.disable import DisableAbleCommandHandler
 
 sites_list = {
-    "Telegram": "https://api.telegram.org",
-    "Kaizoku": "https://animekaizoku.com",
-    "Kayo": "https://animekayo.com",
-    "Jikan": "https://api.jikan.moe/v3",
+    "Telegram": "https://api.telegram.org"
 }
 
 
@@ -58,10 +55,6 @@ def ping_func(to_ping: List[str]) -> List[str]:
 
         pinged_site = f"<b>{each_ping}</b>"
 
-        if each_ping == "Kaizoku" or each_ping == "Kayo":
-            pinged_site = f'<a href="{sites_list[each_ping]}">{each_ping}</a>'
-            ping_time = f"<code>{ping_time} (Status: {r.status_code})</code>"
-
         ping_text = f"{pinged_site}: <code>{ping_time}</code>"
         ping_result.append(ping_text)
 
@@ -90,7 +83,7 @@ def ping(update: Update, context: CallbackContext):
 @run_async
 @sudo_plus
 def pingall(update: Update, context: CallbackContext):
-    to_ping = ["Kaizoku", "Kayo", "Telegram", "Jikan"]
+    to_ping = ["Telegram"]
     pinged_list = ping_func(to_ping)
     pinged_list.insert(2, "")
     uptime = get_readable_time((time.time() - StartTime))
@@ -105,10 +98,8 @@ def pingall(update: Update, context: CallbackContext):
 
 
 PING_HANDLER = DisableAbleCommandHandler("ping", ping)
-PINGALL_HANDLER = DisableAbleCommandHandler("pingall", pingall)
 
 dispatcher.add_handler(PING_HANDLER)
-dispatcher.add_handler(PINGALL_HANDLER)
 
-__command_list__ = ["ping", "pingall"]
-__handlers__ = [PING_HANDLER, PINGALL_HANDLER]
+__command_list__ = ["ping"]
+__handlers__ = [PING_HANDLER]
