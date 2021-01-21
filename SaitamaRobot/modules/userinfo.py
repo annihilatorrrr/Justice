@@ -326,8 +326,7 @@ def info(update: Update, context: CallbackContext):
         # Incase user don't have profile pic, send normal text
 
 
-@run_async
-def about_me(update: Update, context: CallbackContext):
+async def about_me(update: Update, context: CallbackContext):
     bot, args = context.bot, context.args
     message = update.effective_message
     user_id = extract_user(message, args)
