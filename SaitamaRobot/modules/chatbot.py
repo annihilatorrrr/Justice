@@ -20,7 +20,6 @@ from telegram.ext import (
     run_async,
 )
 from telegram.utils.helpers import mention_html
-from telegram.ChatPermissions import can_change_info
 
 CoffeeHouseAPI = API(AI_API_KEY)
 api_client = LydiaAI(CoffeeHouseAPI)
@@ -28,7 +27,6 @@ api_client = LydiaAI(CoffeeHouseAPI)
 
 @run_async
 @user_admin
-@can_change_info
 def add_chat(update: Update, context: CallbackContext):
     global api_client
     chat = update.effective_chat
@@ -58,7 +56,6 @@ def add_chat(update: Update, context: CallbackContext):
 
 @run_async
 @user_admin
-@can_change_info
 def remove_chat(update: Update, context: CallbackContext):
     msg = update.effective_message
     chat = update.effective_chat
