@@ -54,7 +54,7 @@ def get_user_id(username):
 
 
 @run_async
-@dev_plus
+@sudo_plus
 def broadcast(update: Update, context: CallbackContext):
     to_send = update.effective_message.text.split(None, 1)
 
