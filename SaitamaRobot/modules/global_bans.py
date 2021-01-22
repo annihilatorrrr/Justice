@@ -23,7 +23,6 @@ from SaitamaRobot import (
     STRICT_GBAN,
     DRAGONS,
     SUPPORT_CHAT,
-    SPAMWATCH_SUPPORT_CHAT,
     DEMONS,
     TIGERS,
     WOLVES,
@@ -413,26 +412,6 @@ def jbanlist(update: Update, context: CallbackContext):
         )
 
 
-def check_and_ban(update, user_id, should_message=True):
-
-    chat = update.effective_chat  # type: Optional[Chat]
-    try:
-        sw_ban = sw.get_ban(int(user_id))
-    except:
-        sw_ban = None
-
-    if sw_ban:
-        update.effective_chat.kick_member(user_id)
-        if should_message:
-            update.effective_message.reply_text(
-                f"<b>Alert</b>: this user is globally banned.\n"
-                f"<code>*bans them from here*</code>.\n"
-                f"<b>Appeal chat</b>: {SPAMWATCH_SUPPORT_CHAT}\n"
-                f"<b>User ID</b>: <code>{sw_ban.id}</code>\n"
-                f"<b>Ban Reason</b>: <code>{html.escape(sw_ban.reason)}</code>",
-                parse_mode=ParseMode.HTML,
-            )
-        return
 
     if sql.is_user_gbanned(user_id):
         update.effective_chat.kick_member(user_id)
@@ -536,21 +515,6 @@ def __migrate__(old_chat_id, new_chat_id):
 def __chat_settings__(chat_id, user_id):
     return f"This chat is enforcing *gbans*: `{sql.does_chat_gban(chat_id)}`."
 
-
-__help__ = f"""
-*Admins only:*
- • `/antispam <on/off/yes/no>`*:* Will toggle our antispam tech or return your current settings.
-
-Anti-Spam, used by bot devs to ban spammers across all groups. This helps protect \
-you and your groups by removing spam flooders as quickly as possible.
-*Note:* Users can appeal gbans or report spammers at @{SUPPORT_CHAT}
-
-This also integrates @Spamwatch API to remove Spammers as much as possible from your chatroom!
-*What is SpamWatch?*
-SpamWatch maintains a large constantly updated ban-list of spambots, trolls, bitcoin spammers and unsavoury characters[.](https://telegra.ph/file/f584b643c6f4be0b1de53.jpg)
-Constantly help banning spammers off from your group automatically So, you wont have to worry about spammers storming your group.
-*Note:* Users can appeal spamwatch bans at @SpamwatchSupport
-"""
 
 GBAN_HANDLER = CommandHandler("jban", jban)
 UNGBAN_HANDLER = CommandHandler("unjban", unjban)
