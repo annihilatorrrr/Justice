@@ -26,7 +26,6 @@ from SaitamaRobot import (
     DEMONS,
     TIGERS,
     WOLVES,
-    sw,
     dispatcher,
 )
 from SaitamaRobot.modules.helper_funcs.chat_status import (
