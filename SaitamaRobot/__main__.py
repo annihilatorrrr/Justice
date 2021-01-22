@@ -100,8 +100,7 @@ And the following:
     "" if not ALLOW_EXCL else "\nAll commands can either be used with / or !.\n",
 )
 
-DONATE_STRING = 
-"""
+DONATE_STRING = """
 I DON'T REQUIRED DONATIONS FOR NOW,
 THANKS.
 BUT YOU CAN DONATE THE ORIGINAL DEVLOPER ON [PayPal](https://paypal.me/PaulSonOfLars)
