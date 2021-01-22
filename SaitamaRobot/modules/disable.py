@@ -333,13 +333,6 @@ if is_module_loaded(FILENAME):
     dispatcher.add_handler(COMMANDS_HANDLER)
     dispatcher.add_handler(TOGGLE_HANDLER)
 
-    __help__ = """
-    • Backend Module
-
-    *Admins only:*
-    • Backend """
-
-    __mod_name__ = "Command disabling"
 
 else:
     DisableAbleCommandHandler = CommandHandler
