@@ -399,6 +399,10 @@ def selfunban(context: CallbackContext, update: Update) -> str:
 
 
 __help__ = """
+Some people need to be publicly banned; spammers, annoyances, or just trolls.
+
+This module allows you to do that easily, by exposing some common actions, so everyone will see!
+
  • `/kickme`*:* kick the user who issued the command
 
 *Admins only:*
