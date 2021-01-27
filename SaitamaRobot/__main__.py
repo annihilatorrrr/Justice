@@ -17,7 +17,7 @@ from SaitamaRobot import (
     WEBHOOK,
     SUPPORT_CHAT,
     dispatcher,
-    #StartTime,
+    StartTime,
     telethn,
     updater,
 )
@@ -47,11 +47,38 @@ from telegram.ext.dispatcher import DispatcherHandlerStop, run_async
 from telegram.utils.helpers import escape_markdown
 
 
+def get_readable_time(seconds: int) -> str:
+    count = 0
+    ping_time = ""
+    time_list = []
+    time_suffix_list = ["s", "m", "h", "days"]
+
+    while count < 4:
+        count += 1
+        remainder, result = divmod(seconds, 60) if count < 3 else divmod(seconds, 24)
+        if seconds == 0 and remainder == 0:
+            break
+        time_list.append(int(result))
+        seconds = int(remainder)
+
+    for x in range(len(time_list)):
+        time_list[x] = str(time_list[x]) + time_suffix_list[x]
+    if len(time_list) == 4:
+        ping_time += time_list.pop() + ", "
+
+    time_list.reverse()
+    ping_time += ":".join(time_list)
+
+    return ping_time
+
+
 PM_START_TEXT = """
-Hi {}, my name is {}! 
-I am an Anime themed group management bot.
-Build by weebs for weebs, I specialize in managing anime and similar themed groups.
-You can find my list of available commands with /help.
+Hey there! My name is *Justice*! 
+
+I am not a Group Manager Bot but I'm much more *POWERFULL* and I can help u keep your groups *SAFE* 
+
+Learn more about me @AboutJustice
+For my list of commands click /help.
 """
 
 HELP_STRINGS = """
@@ -64,9 +91,12 @@ you can click the button to see their commands!
 )
 
 DONATE_STRING = """
-Good to head you would like to donate! But I do not need any donations as of now. 
-Thank You!
+I DON'T REQUIRED DONATIONS FOR NOW,
+THANKS.
+BUT YOU CAN DONATE THE ORIGINAL DEVLOPER ON [PayPal](https://paypal.me/PaulSonOfLars)
 """
+
+SAITAMA_IMG = "https://telegra.ph/file/46e6d9dfcb3eb9eae95d9.jpg"
 
 IMPORTED = {}
 MIGRATEABLE = []
@@ -138,6 +168,7 @@ def test(update: Update, context: CallbackContext):
 @run_async
 def start(update: Update, context: CallbackContext):
     args = context.args
+    uptime = get_readable_time((time.time() - StartTime))
     if update.effective_chat.type == "private":
         if len(args) >= 1:
             if args[0].lower() == "help":
@@ -181,7 +212,7 @@ def start(update: Update, context: CallbackContext):
                     [
                         [
                             InlineKeyboardButton(
-                                text="👑 Add Justice to your group 👑",
+                                text="Add me to your group",
                                 url="t.me/{}?startgroup=true".format(
                                     context.bot.username
                                 ),
@@ -192,7 +223,9 @@ def start(update: Update, context: CallbackContext):
             )
     else:
         update.effective_message.reply_text(
-            "I am always online to give you justice! <3",
+            "I'm awake already!\n<b>Haven't slept since:</b> <code>{}</code>".format(
+                uptime
+            ),
             parse_mode=ParseMode.HTML,
         )
 
@@ -560,6 +593,16 @@ def migrate_chats(update: Update, context: CallbackContext):
 
 def main():
 
+    if SUPPORT_CHAT is not None and isinstance(SUPPORT_CHAT, str):
+        try:
+            dispatcher.bot.sendMessage(f"@{SUPPORT_CHAT}", "I am now online!")
+        except Unauthorized:
+            LOGGER.warning(
+                "Bot isnt able to send message to support_chat, go and check!"
+            )
+        except BadRequest as e:
+            LOGGER.warning(e.message)
+
     test_handler = CommandHandler("test", test)
     start_handler = CommandHandler("start", start)
 
@@ -605,6 +648,6 @@ def main():
 
 
 if __name__ == "__main__":
-    LOGGER.info("All done! Balle balle shawa shawa: " + str(ALL_MODULES))
+    LOGGER.info("Successfully loaded modules: " + str(ALL_MODULES))
     telethn.start(bot_token=TOKEN)
     main()
