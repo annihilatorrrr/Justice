@@ -223,10 +223,7 @@ def info(update: Update, context: CallbackContext):
     else:
         return
 
-    rep = message.reply_text(
-        "<code>Appraising...</code>", parse_mode=ParseMode.HTML)
-
-    text = (f"<b> Appraisal results:</b> \n"
+    text = (f"<b> Justice INFO:</b> \n"
             f"ID: <code>{user.id}</code>\n"
             f"First Name: {html.escape(user.first_name)}")
 
@@ -254,26 +251,17 @@ def info(update: Update, context: CallbackContext):
                 elif status in {"administrator", "creator"}:
                     text += _stext.format("Admin")
 
-    disaster_level_present = False
 
     if user.id == OWNER_ID:
-        text += "\n\nOwner"
-        disaster_level_present = True
+        text += "\n\nThis guy is my owner."
     elif user.id in DEV_USERS:
-        text += "\n\nDevloper."
-        disaster_level_present = True
+        text += "\n\nThis guy is my developer."
     elif user.id in DRAGONS:
-        text += "\n\nThe Disaster level of this person is 'Dragon'."
-        disaster_level_present = True
+        text += "\n\nThis guy is my sudo user."
     elif user.id in DEMONS:
-        text += "\n\nThe Disaster level of this person is 'Demon'."
-        disaster_level_present = True
-    elif user.id in TIGERS:
-        text += "\n\nThe Disaster level of this person is 'Tiger'."
-        disaster_level_present = True
+        text += "\n\nThis guy is my support user."
     elif user.id in WOLVES:
-        text += "\n\nThe Disaster level of this person is 'Wolf'."
-        disaster_level_present = True
+        text += "\n\nThis guy is a whitelisted user."
 
     try:
         user_member = chat.get_member(user.id)
@@ -317,8 +305,6 @@ def info(update: Update, context: CallbackContext):
     else:
         message.reply_text(
             text, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
-
-    rep.delete()
 
 
 @run_async
