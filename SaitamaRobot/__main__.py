@@ -74,9 +74,11 @@ def get_readable_time(seconds: int) -> str:
 
 PM_START_TEXT = """
 Hi my name is *Justice*! 
+
 I am not a Group Manager Bot but I'm much more powerfull and I can help u keep your groups *SAFE* 
-To Learn more about me then go to @AboutJustice
-You can find my list of available commands with /help.
+
+Learn more about me @AboutJustice
+You can find my list of commands with /help.
 """
 
 HELP_STRINGS = """
