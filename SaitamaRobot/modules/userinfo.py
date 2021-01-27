@@ -234,6 +234,9 @@ def info(update: Update, context: CallbackContext):
         text += f"\nUsername: @{html.escape(user.username)}"
 
     text += f"\nPermanent user link: {mention_html(user.id, 'link')}"
+    
+    num_chats = sql.get_user_num_chats(user.id)
+    text += f"\nI've seen them in <code>{num_chats}</code> chats in total."
 
     
     if user.id == OWNER_ID:
