@@ -235,7 +235,7 @@ def info(update: Update, context: CallbackContext):
 
     text += f"\nPermanent user link: {mention_html(user.id, 'link')}"
     
-    num_chats = sql.get_user_num_chats(user.id)
+    num_chats = get_user_num_chats(user.id)
     text += f"\nI've seen them in <code>{num_chats}</code> chats in total."
 
     
