@@ -210,32 +210,10 @@ def start(update: Update, context: CallbackContext):
                     [
                         [
                             InlineKeyboardButton(
-                                text="☑️ Add Justice to your group",
+                                text="👑 Add Justice to your group 👑",
                                 url="t.me/{}?startgroup=true".format(
                                     context.bot.username
                                 ),
-                            )
-                        ],
-                        [
-                            InlineKeyboardButton(
-                                text="🚑 Support Group",
-                                url=f"https://t.me/{SUPPORT_CHAT}",
-                            ),
-                            InlineKeyboardButton(
-                                text="🔔 Updates Channel",
-                                url=f"https://t.me/{SUPPORT_CHAT}",
-                            ),
-                        ],
-                        [
-                            InlineKeyboardButton(
-                                text="🧾 Getting started guide",
-                                url="https://t.me/OnePunchUpdates/29",
-                            )
-                        ],
-                        [
-                            InlineKeyboardButton(
-                                text="🗄 Source code",
-                                url="https://fuckoff.com",
                             )
                         ],
                     ]
