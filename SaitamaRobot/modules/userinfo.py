@@ -223,7 +223,7 @@ def info(update: Update, context: CallbackContext):
     else:
         return
 
-    text = (f"<b> Justice INFO:</b> \n"
+    text = (f"<b> User info: </b> \n"
             f"ID: <code>{user.id}</code>\n"
             f"First Name: {html.escape(user.first_name)}")
 
@@ -233,25 +233,9 @@ def info(update: Update, context: CallbackContext):
     if user.username:
         text += f"\nUsername: @{html.escape(user.username)}"
 
-    text += f"\nPermalink: {mention_html(user.id, 'link')}"
+    text += f"\nPermanent user link: {mention_html(user.id, 'link')}"
 
-    if chat.type != "private" and user_id != bot.id:
-        _stext = "\nPresence: <code>{}</code>"
-
-        afk_st = is_afk(user.id)
-        if afk_st:
-            text += _stext.format("AFK")
-        else:
-            status = status = bot.get_chat_member(chat.id, user.id).status
-            if status:
-                if status in {"left", "kicked"}:
-                    text += _stext.format("Not here")
-                elif status == "member":
-                    text += _stext.format("Detected")
-                elif status in {"administrator", "creator"}:
-                    text += _stext.format("Admin")
-
-
+    
     if user.id == OWNER_ID:
         text += "\n\nThis guy is my owner."
     elif user.id in DEV_USERS:
