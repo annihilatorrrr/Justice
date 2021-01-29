@@ -44,7 +44,7 @@ def promote(update: Update, context: CallbackContext) -> str:
         not (promoter.can_promote_members or promoter.status == "creator")
         and user.id not in DRAGONS
     ):
-        message.reply_text("You don't have the necessary rights to do that!")
+        message.reply_text("Sorry mate, you don't have the right to do that!")
         return
 
     user_id = extract_user(message, args)
@@ -65,7 +65,7 @@ def promote(update: Update, context: CallbackContext) -> str:
         return
 
     if user_id == bot.id:
-        message.reply_text("I can't promote myself! Get an admin to do it for me.")
+        message.reply_text("I can't promote myself! Get an @admin to do it for me.")
         return
 
     # set same perms as bot - bot can't assign higher perms than itself!
