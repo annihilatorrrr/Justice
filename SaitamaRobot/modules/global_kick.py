@@ -4,7 +4,7 @@ from typing import List, Optional
 from telegram.error import BadRequest, TelegramError
 from telegram.ext import run_async, CommandHandler, MessageHandler, Filters
 from telegram.utils.helpers import mention_html
-from SaitamaRobot import dispatcher, OWNER_ID, DRAGONS, DEMONS, GBAN_LOGS, DEV_USERS
+from SaitamaRobot import dispatcher, OWNER_ID, DRAGONS, DEMONS, DEV_USERS
 from SaitamaRobot.modules.helper_funcs.chat_status import user_admin, is_user_admin
 from SaitamaRobot.modules.helper_funcs.extraction import extract_user, extract_user_and_text
 from SaitamaRobot.modules.helper_funcs.filters import CustomFilters
@@ -34,7 +34,8 @@ GKICK_ERRORS = {
 }
 
 @run_async
-def gkick(bot: Bot, update: Update, args: List[str]):
+def gkick(update: Update, context: CallbackContext):
+    bot, args = context.bot, context.args
     message = update.effective_message
     user_id = extract_user(message, args)
     try:
@@ -51,7 +52,7 @@ def gkick(bot: Bot, update: Update, args: List[str]):
     if not user_id or int(user_id)==777000:
         message.reply_text("You don't seem to be referring to a user.")
         return
-    if int(user_id) in SUDO_USERS or int(user_id) in SUPPORT_USERS or int(user_id) in DEV_USERS:
+    if int(user_id) in DRAGONS or int(user_id) in DEMONS or int(user_id) in DEV_USERS:
         message.reply_text("OHHH! Someone's trying to gkick a sudo/support user! *Grabs popcorn*")
         return
     if int(user_id) == OWNER_ID:
@@ -77,19 +78,19 @@ def gkick(bot: Bot, update: Update, args: List[str]):
                  "\n<b>ID:</b> <code>{}</code>".format(mention_html(banner.id, banner.first_name),
                                               mention_html(user_chat.id, user_chat.first_name), 
                                                            user_chat.id))
-    if GBAN_LOGS:
+    if EVENT_LOGS:
         try:
             log = bot.send_message(
-                GBAN_LOGS, log_message, parse_mode=ParseMode.HTML)
+                EVENT_LOGS, log_message, parse_mode=ParseMode.HTML)
         except BadRequest as e:
             print(e)
             log = bot.send_message(
-                GBAN_LOGS,
+                EVENT_LOGS,
                 log_message +
                 "\n\nFormatting has been disabled due to an unexpected error.")
 
     else:
-        send_to_list(bot, SUDO_USERS + DEV_USERS, log_message, html=True)
+        send_to_list(bot, DRAGONS + DEV_USERS, log_message, html=True)
 	
     message.reply_text("Globally kicking user {}".format(user_chat.first_name))
     sql.gkick_user(user_id, user_chat.username, 1)
@@ -113,7 +114,7 @@ def gkick(bot: Bot, update: Update, args: List[str]):
 def __user_info__(user_id):
     times = sql.get_times(user_id)
     
-    if int(user_id) in SUDO_USERS or int(user_id) in SUPPORT_USERS:
+    if int(user_id) in DRAGONS or int(user_id) in DEMONS:
         text="Globally kicked: <b>No</b> (Immortal)"
     else:
         text = "Globally kicked: {}"
@@ -124,7 +125,8 @@ def __user_info__(user_id):
     return text
 
 @run_async
-def gkickset(bot: Bot, update: Update, args: List[str]):
+def gkickset(update: Update, context: CallbackContext):
+    args = context.args
     message = update.effective_message
     user_id, value = extract_user_and_text(message, args)
     try:
@@ -139,9 +141,9 @@ def gkickset(bot: Bot, update: Update, args: List[str]):
     if not user_id:
         message.reply_text("You do not seems to be referring to a user")
         return  
-    if int(user_id) in SUDO_USERS or int(user_id) in SUPPORT_USERS:
+    if int(user_id) in DRAGONS or int(user_id) in DEMONS:
         message.reply_text("SUDOER: Irrelevant")
-        return
+        return	
     if int(user_id) == OWNER_ID:
         message.reply_text("OWNER: Irrelevant")
         return
@@ -152,7 +154,8 @@ def gkickset(bot: Bot, update: Update, args: List[str]):
     sql.gkick_setvalue(user_id, user_chat.username, int(value))
     return
 
-def gkickreset(bot: Bot, update: Update, args: List[str]):
+def gkickreset(update: Update, context: CallbackContext):
+    args = context.args
     message = update.effective_message
     user_id, value = extract_user_and_text(message, args)
     try:
@@ -167,7 +170,7 @@ def gkickreset(bot: Bot, update: Update, args: List[str]):
     if not user_id:
         message.reply_text("You do not seems to be referring to a user")
         return  
-    if int(user_id) in SUDO_USERS or int(user_id) in SUPPORT_USERS:
+    if int(user_id) in DRAGONS or int(user_id) in DEMONS:
         message.reply_text("SUDOER: Irrelevant")
         return
     if int(user_id) == OWNER_ID:
@@ -181,10 +184,10 @@ def gkickreset(bot: Bot, update: Update, args: List[str]):
     return
 
 			
-GKICK_HANDLER = CommandHandler("gkick", gkick, pass_args=True,
+GKICK_HANDLER = CommandHandler("gkick", gkick,
                               filters=CustomFilters.sudo_filter | CustomFilters.support_filter)
-SET_HANDLER = CommandHandler("gkickset", gkickset, pass_args=True,filters=Filters.user(OWNER_ID))
-RESET_HANDLER = CommandHandler("gkickreset", gkickreset, pass_args=True,filters=Filters.user(OWNER_ID))
+SET_HANDLER = CommandHandler("gkickset", gkickset,filters=Filters.user(OWNER_ID))
+RESET_HANDLER = CommandHandler("gkickreset", gkickreset,filters=Filters.user(OWNER_ID))
 
 dispatcher.add_handler(GKICK_HANDLER)
 dispatcher.add_handler(SET_HANDLER)
